@@ -1,0 +1,104 @@
+#hangman-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#word {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+#letters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.letter {
+    font-size: 2em;
+    margin: 5px;
+    cursor: pointer;
+}
+
+#hangman-figure {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 120px;
+    height: 240px;
+    margin-bottom: 20px;
+}
+
+.part {
+    display: none;
+    position: absolute;
+    background-color: black;
+}
+
+#head {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#body {
+    width: 10px;
+    height: 80px;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#left-arm {
+    width: 10px;
+    height: 60px;
+    top: 50px;
+    left: 30px;
+    transform: rotate(45deg);
+    transform-origin: top right;
+}
+
+#right-arm {
+    width: 10px;
+    height: 60px;
+    top: 50px;
+    left: 70px;
+    transform: rotate(-45deg);
+    transform-origin: top left;
+}
+
+#left-leg {
+    width: 10px;
+    height: 60px;
+    top: 120px;
+    left: 40px;
+    transform: rotate(30deg);
+    transform-origin: top right;
+}
+
+#right-leg {
+    width: 10px;
+    height: 60px;
+    top: 120px;
+    left: 60px;
+    transform: rotate(-30deg);
+    transform-origin: top left;
+}
+
+#wrong-letters {
+    font-size: 1.5em;
+    color: red;
+    margin-bottom: 20px;
+}
+
+button {
+    font-size: 1em;
+    padding: 10px 20px;
+    cursor: pointer;
+}

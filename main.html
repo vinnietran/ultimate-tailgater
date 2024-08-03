@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steelers Tailgate Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Level 1: Trivia -->
+        <section id="trivia-level" class="level">
+            <h2>Trivia Level</h2>
+            <div id="trivia-question">What year were the Steelers founded?</div>
+            <button onclick="checkTriviaAnswer('1933')">1933</button>
+            <button onclick="checkTriviaAnswer('1945')">1945</button>
+            <button onclick="checkTriviaAnswer('1960')">1960</button>
+            <button onclick="checkTriviaAnswer('1970')">1970</button>
+        </section>
+
+    <!-- Level 2: Hangman -->
+<section id="hangman-level" class="level">
+    <h2>Hangman Level</h2>
+    <div id="hangman-container">
+        <div id="word"></div>
+        <div id="letters"></div>
+        <div id="hangman-figure">
+            <div class="part" id="head"></div>
+            <div class="part" id="body"></div>
+            <div class="part" id="left-arm"></div>
+            <div class="part" id="right-arm"></div>
+            <div class="part" id="left-leg"></div>
+            <div class="part" id="right-leg"></div>
+        </div>
+        <div id="wrong-letters"></div>
+        <button onclick="checkHangmanWin()">Next Level</button>
+    </div>
+</section>
+
+
+        <!-- Level 3: Matching -->
+        <section id="matching-level" class="level">
+            <h2>Matching Level</h2>
+            <!-- Matching game structure -->
+        </section>
+
+        <!-- Level 4: Video Question -->
+        <section id="video-question-level" class="level">
+            <h2>Video Question Level</h2>
+            <video id="video-question" controls>
+                <source src="question.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <!-- Display question after video -->
+        </section>
+
+        <!-- Level 5: Silhouette Reveal -->
+        <section id="silhouette-level" class="level">
+            <h2>Silhouette Reveal Level</h2>
+            <!-- Silhouette reveal structure -->
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
