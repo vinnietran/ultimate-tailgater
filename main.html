@@ -3,63 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steelers Tailgate Game</title>
+    <title>Ultimate Tailgater Challenge</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="game-container">
+        <!-- Start Screen: Capture User Name -->
+        <section id="start-screen" class="level active">
+            <h1>Welcome to Ultimate Tailgater Challenge</h1>
+            <form id="user-form">
+                <input type="text" id="first-name" placeholder="First Name" required>
+                <input type="text" id="last-name" placeholder="Last Name" required>
+                <button type="submit">Start Game</button>
+            </form>
+        </section>
+
         <!-- Level 1: Trivia -->
         <section id="trivia-level" class="level">
             <h2>Trivia Level</h2>
             <div id="trivia-question">What year were the Steelers founded?</div>
-            <button onclick="checkTriviaAnswer('1933')">1933</button>
-            <button onclick="checkTriviaAnswer('1945')">1945</button>
-            <button onclick="checkTriviaAnswer('1960')">1960</button>
-            <button onclick="checkTriviaAnswer('1970')">1970</button>
+            <div class="options">
+                <button onclick="checkTriviaAnswer('1933')">1933</button>
+                <button onclick="checkTriviaAnswer('1945')">1945</button>
+                <button onclick="checkTriviaAnswer('1960')">1960</button>
+                <button onclick="checkTriviaAnswer('1970')">1970</button>
+            </div>
+            <div id="trivia-message" class="message"></div>
+            <button id="trivia-next-button" class="hidden" onclick="loadTriviaQuestion()">Next Question</button>
         </section>
 
-    <!-- Level 2: Hangman -->
-<section id="hangman-level" class="level">
-    <h2>Hangman Level</h2>
-    <div id="hangman-container">
-        <div id="word"></div>
-        <div id="letters"></div>
-        <div id="hangman-figure">
-            <div class="part" id="head"></div>
-            <div class="part" id="body"></div>
-            <div class="part" id="left-arm"></div>
-            <div class="part" id="right-arm"></div>
-            <div class="part" id="left-leg"></div>
-            <div class="part" id="right-leg"></div>
-        </div>
-        <div id="wrong-letters"></div>
-        <button onclick="checkHangmanWin()">Next Level</button>
-    </div>
-</section>
-
-
-        <!-- Level 3: Matching -->
-        <section id="matching-level" class="level">
-            <h2>Matching Level</h2>
-            <!-- Matching game structure -->
+        <!-- Level 2: Hangman -->
+        <section id="hangman-level" class="level">
+            <h2>Hangman Level</h2>
+            <div id="hangman-container">
+                <div id="hangman-message" class="message"></div>
+                <div id="word"></div>
+                <div id="letters"></div>
+                <div id="hangman-figure">
+                    <div class="part" id="head"></div>
+                    <div class="part" id="body"></div>
+                    <div class="part" id="left-arm"></div>
+                    <div class="part" id="right-arm"></div>
+                    <div class="part" id="left-leg"></div>
+                    <div class="part" id="right-leg"></div>
+                </div>
+                <div id="wrong-letters"></div>
+                <button id="hangman-next-button" class="hidden" onclick="showLevel('video-question-level')">Next Level</button>
+            </div>
         </section>
 
-        <!-- Level 4: Video Question -->
+        <!-- Level 3: Video Question -->
         <section id="video-question-level" class="level">
-            <h2>Video Question Level</h2>
-            <video id="video-question" controls>
-                <source src="question.mp4" type="video/mp4">
+            <h2>Daily Double</h2>
+            <video id="video-question" controls autoplay muted playsinline>
+                <source src="Daily Double.mp4" type="video/mp4">
                 Your browser does not support the video tag.
+                <track label="English" kind="subtitles" srclang="en" src="DailyDouble.vtt" default>
             </video>
-            <!-- Display question after video -->
+            <div id="video-question-options" class="hidden">
+                <p>This Hall of Game coach is known for his innovative zone blitz scheme</p>
+                <button onclick="checkVideoAnswer('Who is Chuck Noll?')">Option 1</button>
+                <button onclick="checkVideoAnswer('Who is Joe Green?')">Option 2</button>
+                <button onclick="checkVideoAnswer('Who is Dick Lebeau?')">Option 3</button>
+                <button onclick="checkVideoAnswer('Who is Coach Cahr?')">Option 4</button>
+            </div>
         </section>
 
-        <!-- Level 5: Silhouette Reveal -->
-        <section id="silhouette-level" class="level">
-            <h2>Silhouette Reveal Level</h2>
-            <!-- Silhouette reveal structure -->
+        <!-- Completion Screen -->
+        <section id="completion-screen" class="level">
+            <h2>Congratulations!</h2>
+            <p>Your Score: <span id="final-score">0</span></p>
+            <button onclick="submitScore()">Submit Score</button>
         </section>
     </div>
+
+    <!-- Submission Confirmation -->
+    <!-- <div id="submission-confirmation" class="hidden">
+        <p>Thank you! Your score has been submitted.</p>
+    </div> -->
 
     <script src="script.js"></script>
 </body>
