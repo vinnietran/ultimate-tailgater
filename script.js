@@ -27,6 +27,16 @@ const triviaQuestions = [
         question: "What is the name of the front office position that Omar Khan holds for the Pittsburgh Steelers?",
         options: ["Scout", "General Manager", "Draft Specialist", "Running Back"],
         answer: "General Manager"
+    },
+    {
+        question: "What happens if the ball carrier is tackled in their own end zone?",
+        options: ["TouchDahn!", "TouchBACK!", "Safety", "Coach Cahr"],
+        answer: "Hypocycloid"
+    },
+    {
+        question: "What shape is featured on the Pittsburgh Steelers logo?",
+        options: ["Rombous", "Hypocycloid", "Diamond", "Square"],
+        answer: "Hypocycloid"
     }
     // Add more trivia questions here
 ];
@@ -112,6 +122,7 @@ function checkTriviaAnswer(selectedOption) {
         currentTriviaQuestionIndex += 1;
         loadTriviaQuestion();
     } else {
+        currentTriviaQuestionIndex += 1;
         loadTriviaQuestion();
     }
 }
@@ -138,6 +149,22 @@ function displayWord() {
                 letter => `
                     <span class="letter">
                         ${correctLetters.includes(letter) ? letter : '_'}
+                    </span>
+                `
+            )
+            .join('')}
+    `;
+}
+
+function displayWordLoss() {
+    const wordContainer = document.getElementById('word');
+    wordContainer.innerHTML = `
+        ${selectedWord
+            .split('')
+            .map(
+                letter => `
+                    <span class="letter">
+                        ${correctLetters.includes(letter) ? letter : letter}
                     </span>
                 `
             )
@@ -193,7 +220,8 @@ function checkHangmanWin() {
 
 function checkHangmanLoss() {
     if (wrongLetters.length === hangmanParts.length) {
-        document.getElementById("hangman-message").innerHTML = "\<img src=\"wrong-not.gif\" alt=\"WRONG\" />";        
+        document.getElementById("hangman-message").innerHTML = "\<img src=\"wrong-not.gif\" alt=\"WRONG\" />";  
+        displayWordLoss();      
         setTimeout(() => {
             showLevel('video-question-level');
         }, 3000);
@@ -234,6 +262,9 @@ function checkVideoAnswer(selectedOption) {
     } else {
     }
     showLevel('completion-screen');
+    submitScore()
+    getLeaderboardData()
+    //setInterval(getLeaderboardData, 1000); // Refresh leaderboard every second
 }
 
 // ===================== Completion Screen =====================
@@ -249,12 +280,11 @@ function moveToNextLevel() {
 // ===================== Submit Score to Google Sheets =====================
 
 // Replace with your Google Apps Script Web App URL
-const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyLpRHxtRG0vGruKE5bgN3-ag4Eixy7z5wMwOSf2lCok1jpJDLsVUUiSY2ljoRqCK5dwQ/exec';
 
 function submitScore() {
     const data = {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
+        name: userData.firstName + " " + userData.lastName,
         score: score
     };
 
@@ -266,13 +296,57 @@ function submitScore() {
         },
         body: JSON.stringify(data)
     })
-    .then(() => {
-        // Hide game container and show confirmation
-        document.getElementById('game-container').classList.add('hidden');
-        document.getElementById('submission-confirmation').classList.remove('hidden');
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        //alert('There was an error submitting your score.');
-    });
+}
+
+function getLeaderboardData() {
+    fetch(GOOGLE_SHEET_WEB_APP_URL)
+        .then(response => response.json())
+        .then(data => {
+            const leaderboardElement = document.getElementById('leaderboard-body');
+            leaderboardElement.innerHTML = ''; // Clear previous leaderboard data
+
+            // Sort data by score in descending order
+            data.sort((a, b) => b.score - a.score);
+
+            // Calculate ranks
+            let rank = 1;
+            let prevScore = data[0].score;
+            data.forEach((entry, index) => {
+                if (entry.score < prevScore) {
+                    rank = index + 1;
+                }
+                entry.rank = rank;
+                prevScore = entry.score;
+            });
+
+            // Populate table with data
+            data.forEach(entry => {
+                const entryRow = document.createElement('tr');
+                const rankCell = document.createElement('td');
+                rankCell.style.border = '5px solid gray'; // Add gray border
+                console.log(entry.rank);
+                if (entry.rank === 1) {
+                    console.log("Trophy");
+                    const trophyImg = document.createElement('img');
+                    trophyImg.src = 'trophy.gif';
+                    trophyImg.alt = 'Trophy';
+                    console.log(trophyImg)
+                    rankCell.appendChild(trophyImg);
+                }
+                rankCell.innerText = entry.rank;
+                const nameCell = document.createElement('td');
+                nameCell.innerText = entry.name;
+                nameCell.style.border = '5px solid gray'; // Add gray border
+                const scoreCell = document.createElement('td');
+                scoreCell.innerText = entry.score;
+                scoreCell.style.border = '5px solid gray'; // Add gray border
+                entryRow.appendChild(rankCell);
+                entryRow.appendChild(nameCell);
+                entryRow.appendChild(scoreCell);
+                leaderboardElement.appendChild(entryRow);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching leaderboard data:', error);
+        });
 }

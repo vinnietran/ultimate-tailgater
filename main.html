@@ -8,6 +8,7 @@
 </head>
 <body>
     <div id="game-container">
+        <img src="Pittsburgh_Steelers_logo.svg.png" alt="Steelers Logo" id="steelers-logo"></img>
         <!-- Start Screen: Capture User Name -->
         <section id="start-screen" class="level active">
             <h1>Welcome to Ultimate Tailgater Challenge</h1>
@@ -20,7 +21,7 @@
 
         <!-- Level 1: Trivia -->
         <section id="trivia-level" class="level">
-            <h2>Trivia Level</h2>
+            <h2>Trivia</h2>
             <div id="trivia-question">What year were the Steelers founded?</div>
             <div class="options">
                 <button onclick="checkTriviaAnswer('1933')">1933</button>
@@ -34,7 +35,8 @@
 
         <!-- Level 2: Hangman -->
         <section id="hangman-level" class="level">
-            <h2>Hangman Level</h2>
+            <h2>Hangman</h2>
+            <p>Guess the word related to the Pittsburgh Steelers</p>
             <div id="hangman-container">
                 <div id="hangman-message" class="message"></div>
                 <div id="word"></div>
@@ -70,18 +72,26 @@
         </section>
 
         <!-- Completion Screen -->
-        <section id="completion-screen" class="level">
+        <section id="completion-screen" class="level" style="text-align: center;">
             <h2>Congratulations!</h2>
             <p>Your Score: <span id="final-score">0</span></p>
-            <button onclick="submitScore()">Submit Score</button>
+            <h2>Leaderboard</h2>
+            <table id="leaderboard-table" style="border-collapse: collapse; margin: 0 auto;">
+            <thead>
+            <tr>
+                <th style="border: 5px solid gray;">Rank</th>
+                <th style="border: 5px solid gray;">Name</th>
+                <th style="border: 5px solid gray;">Score</th>
+            </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+            <!-- Leaderboard data will be dynamically inserted here -->
+            </tbody>
+            </table>
+        </section>
+        </section>
         </section>
     </div>
-
-    <!-- Submission Confirmation -->
-    <!-- <div id="submission-confirmation" class="hidden">
-        <p>Thank you! Your score has been submitted.</p>
-    </div> -->
-
     <script src="script.js"></script>
 </body>
 </html>

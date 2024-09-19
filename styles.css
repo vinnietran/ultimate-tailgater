@@ -53,7 +53,7 @@ input {
     font-size: 1em;
     background-color: #333;
     color: #FFD700;
-    width: 100%; /* Full width inputs */
+    width: 80%; /* Full width inputs */
 }
 
 input::placeholder {
@@ -210,4 +210,12 @@ input::placeholder {
 
 .message.incorrect {
     color: #FF0000; /* Red for incorrect answers */
+}
+
+#steelers-logo {
+    display: block;
+    max-width: 50%;
+    height: auto;
+    margin-bottom: 20px;
+    margin: 0 auto;
 }
