@@ -263,8 +263,8 @@ function checkVideoAnswer(selectedOption) {
     }
     showLevel('completion-screen');
     submitScore()
-    getLeaderboardData()
-    //setInterval(getLeaderboardData, 1000); // Refresh leaderboard every second
+    //getLeaderboardData()
+    setInterval(getLeaderboardData, 1000); // Refresh leaderboard every second
 }
 
 // ===================== Completion Screen =====================
