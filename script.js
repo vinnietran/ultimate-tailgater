@@ -280,7 +280,7 @@ function moveToNextLevel() {
 // ===================== Submit Score to Google Sheets =====================
 
 // Replace with your Google Apps Script Web App URL
-const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyLpRHxtRG0vGruKE5bgN3-ag4Eixy7z5wMwOSf2lCok1jpJDLsVUUiSY2ljoRqCK5dwQ/exec';
+const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwdcC0CTXGt8tq_zP6kvxriGTvEJDy7N7uxeq7xX0RuWk3NEmNS2frKz5L-iGf1qHagTA/exec';
 
 function submitScore() {
     const data = {
