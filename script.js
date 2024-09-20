@@ -73,46 +73,45 @@ document.getElementById('user-form').addEventListener('submit', function(e) {
 });
 
 // Function to Show a Specific Level
-// function showLevel(levelId) {
-//     console.log('Navigating to level:', levelId); // Debugging
-//     document.querySelectorAll('.level').forEach(level => {
-//         level.classList.remove('active');
-//     });
-//     document.getElementById(levelId).classList.add('active');
-
-//     switch(levelId) {
-//         case 'trivia-level':
-//             loadTriviaQuestion();
-//             break;
-//         case 'hangman-level':
-//             startHangmanGame();
-//             break;
-//         case 'find-ball-level':
-//             initializeFindBallGame();
-//             break;
-//         case 'video-question-level':
-//             setupVideoQuestion();
-//             break;
-//         case 'completion-screen':
-//             displayFinalScore();
-//             break;
-//     }
-// }
-
 function showLevel(levelId) {
-    if (levelId !== 'find-ball-level') {
-        return;
-    }
-
     document.querySelectorAll('.level').forEach(level => {
         level.classList.remove('active');
     });
     document.getElementById(levelId).classList.add('active');
 
-    if (levelId === 'find-ball-level') {
-        initializeFindBallGame();
+    switch(levelId) {
+        case 'trivia-level':
+            loadTriviaQuestion();
+            break;
+        case 'hangman-level':
+            startHangmanGame();
+            break;
+        case 'find-ball-level':
+            initializeFindBallGame();
+            break;
+        case 'video-question-level':
+            setupVideoQuestion();
+            break;
+        case 'completion-screen':
+            displayFinalScore();
+            break;
     }
 }
+// Show a specific level
+// function showLevel(levelId) {
+//     if (levelId !== 'find-ball-level') {
+//         return;
+//     }
+
+//     document.querySelectorAll('.level').forEach(level => {
+//         level.classList.remove('active');
+//     });
+//     document.getElementById(levelId).classList.add('active');
+
+//     if (levelId === 'find-ball-level') {
+//         initializeFindBallGame();
+//     }
+// }
 
 
 // ===================== Trivia Level =====================
@@ -346,11 +345,9 @@ function getLeaderboardData() {
                 rankCell.style.border = '5px solid gray'; // Add gray border
                 console.log(entry.rank);
                 if (entry.rank === 1) {
-                    console.log("Trophy");
                     const trophyImg = document.createElement('img');
                     trophyImg.src = 'trophy.gif';
                     trophyImg.alt = 'Trophy';
-                    console.log(trophyImg)
                     rankCell.appendChild(trophyImg);
                 }
                 rankCell.innerText = entry.rank;
@@ -376,7 +373,6 @@ function getLeaderboardData() {
 
 // ===================== Find the Ball Under the Helmet Level =====================
 
-// Helmet Game Variables
 // Helmet Game Variables
 let ballPosition = null;
 let findBallGameInProgress = false;
@@ -525,6 +521,7 @@ document.querySelectorAll('.helmet').forEach((helmet, index) => {
 
 function revealBall(playerChoice) {
     findBallGameInProgress = false;
+    document.getElementById('ball-instructions').style.display = 'none';
     const helmets = document.querySelectorAll('.helmet-container');
     helmets.forEach((helmetContainer, index) => {
         helmetContainer.querySelector('.helmet').style.pointerEvents = 'none';
@@ -532,15 +529,17 @@ function revealBall(playerChoice) {
             // Lift the helmet to reveal the ball
             const helmetImg = helmetContainer.querySelector('.helmet');
             helmetImg.style.transition = 'top 0.5s';
-            helmetImg.style.top = '-70px'; // Helmet lifts up out of view
+            helmetImg.style.top = '-50px'; // Helmet lifts up out of view
         }
     });
     if (playerChoice === ballPosition) {
+        document.getElementById('find-ball-message').textContent = 'Nailed It!';
         const ballGif = document.getElementById('ball-gif');
         ballGif.style.display = 'block';
         ballGif.innerHTML = '<img src="nicCage.gif" alt="Correct" />';
         score += 1; // Update the score
     } else {
+        document.getElementById('find-ball-message').textContent = 'NOPE!';
         const ballGif = document.getElementById('ball-gif');
         ballGif.style.display = 'block';
         ballGif.innerHTML = '<img src="ss_nope.gif" alt="Wrong" />';
@@ -548,7 +547,7 @@ function revealBall(playerChoice) {
     // Proceed to the next level after a delay
     setTimeout(() => {
         // Uncomment if moving to next level
-        //showLevel('video-question-level');
+        showLevel('video-question-level');
     }, 3000);
 }
 
