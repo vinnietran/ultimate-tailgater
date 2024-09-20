@@ -219,3 +219,104 @@ input::placeholder {
     margin-bottom: 20px;
     margin: 0 auto;
 }
+
+/* Existing styles */
+
+/* Find the Ball Under the Helmet Styles */
+#find-ball-game-area {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.helmet-container {
+    position: absolute; /* Position each helmet container absolutely */
+    width: 100px;
+    height: 100px;
+    transition: left 0.5s ease, top 0.5s ease; /* Smooth transition for shuffling */
+}
+
+.helmet {
+    position: absolute;  /* Helmets must be absolutely positioned */
+    width: 100px;        /* Set appropriate width */
+    height: auto;        /* Maintain aspect ratio */
+    transition: top 0.5s ease-in-out;  /* Smooth transition for lowering */
+    right: 6px;    
+    z-index: 2;
+    /* Align helmets to the right */
+}
+
+
+#ball-gif {
+    display: none; /* Hidden until needed */
+    text-align: center;
+    margin-top: 10px;
+}
+
+#ball {
+    position: absolute;
+    width: 50px;
+    height: auto;
+    bottom: -50px;
+    left: 40%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+#find-ball-message {
+    margin-top: 30px;
+    font-size: 24px;
+}
+
+#find-ball-start-button {
+    padding: 10px 20px;
+    font-size: 18px;
+}
+
+#ball-gif {
+    width: 400px; /* Set a fixed width */
+    height: 370px; /* Set a fixed height */
+    margin: 0 auto; /* Center the div horizontally */
+    border: 2px solid #FFD700; /* Optional: Add a gold border to match the theme */
+    background-color: rgba(255, 255, 0, 0.1); /* Optional: Light background to visualize the div */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center any content inside the div */
+    border-radius: 10px; /* Rounded corners for a nicer look */
+    overflow: hidden; /* Ensures content doesn't overflow */
+    display: none; /* Hide the div by default */
+}
+
+/* Spinner styling */
+#spinner {
+    border: 6px solid #f3f3f3; /* Light grey */
+    border-top: 6px solid #FFD700; /* Gold */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    position: fixed; /* Use fixed positioning to ensure it stays centered even when scrolling */
+    top: 70%; /* Center vertically */
+    left: 45%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust to perfectly center */
+    z-index: 10; /* Ensure the spinner stays on top */
+    display: block; /* Ensure the spinner is visible */
+}
+
+
+/* Keyframes for the spinning effect */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Utility class to hide elements */
+.hidden {
+    display: none;
+}
+
+
+
+/* Optional: Add any additional styles for the game area */
