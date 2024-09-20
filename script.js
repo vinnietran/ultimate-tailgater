@@ -73,28 +73,47 @@ document.getElementById('user-form').addEventListener('submit', function(e) {
 });
 
 // Function to Show a Specific Level
+// function showLevel(levelId) {
+//     console.log('Navigating to level:', levelId); // Debugging
+//     document.querySelectorAll('.level').forEach(level => {
+//         level.classList.remove('active');
+//     });
+//     document.getElementById(levelId).classList.add('active');
+
+//     switch(levelId) {
+//         case 'trivia-level':
+//             loadTriviaQuestion();
+//             break;
+//         case 'hangman-level':
+//             startHangmanGame();
+//             break;
+//         case 'find-ball-level':
+//             initializeFindBallGame();
+//             break;
+//         case 'video-question-level':
+//             setupVideoQuestion();
+//             break;
+//         case 'completion-screen':
+//             displayFinalScore();
+//             break;
+//     }
+// }
+
 function showLevel(levelId) {
-    console.log('Navigating to level:', levelId); // Debugging
+    if (levelId !== 'find-ball-level') {
+        return;
+    }
+
     document.querySelectorAll('.level').forEach(level => {
         level.classList.remove('active');
     });
     document.getElementById(levelId).classList.add('active');
 
-    switch(levelId) {
-        case 'trivia-level':
-            loadTriviaQuestion();
-            break;
-        case 'hangman-level':
-            startHangmanGame();
-            break;
-        case 'video-question-level':
-            setupVideoQuestion();
-            break;
-        case 'completion-screen':
-            displayFinalScore();
-            break;
+    if (levelId === 'find-ball-level') {
+        initializeFindBallGame();
     }
 }
+
 
 // ===================== Trivia Level =====================
 function loadTriviaQuestion() {
@@ -213,7 +232,7 @@ function checkHangmanWin() {
         document.getElementById("hangman-message").innerHTML = "\<img src=\"correct-that-is-correct.gif\" alt=\"Correct\" />";
         score += 1;
         setTimeout(() => {
-            showLevel('video-question-level');
+            showLevel('find-ball-level');
         }, 5000);
     }
 }
@@ -223,7 +242,7 @@ function checkHangmanLoss() {
         document.getElementById("hangman-message").innerHTML = "\<img src=\"wrong-not.gif\" alt=\"WRONG\" />";  
         displayWordLoss();      
         setTimeout(() => {
-            showLevel('video-question-level');
+            showLevel('find-ball-level');
         }, 3000);
     }
 }
@@ -264,7 +283,8 @@ function checkVideoAnswer(selectedOption) {
     showLevel('completion-screen');
     submitScore()
     //getLeaderboardData()
-    setInterval(getLeaderboardData, 1000); // Refresh leaderboard every second
+    document.getElementById('leaderboard-table').classList.add('hidden');
+    setInterval(getLeaderboardData, 10000); // Refresh leaderboard every second
 }
 
 // ===================== Completion Screen =====================
@@ -345,8 +365,194 @@ function getLeaderboardData() {
                 entryRow.appendChild(scoreCell);
                 leaderboardElement.appendChild(entryRow);
             });
+            document.getElementById('spinner').style.display = 'none'; 
+            document.getElementById('leaderboard-table').classList.remove('hidden');
         })
         .catch(error => {
             console.error('Error fetching leaderboard data:', error);
+            document.getElementById('spinner').style.display = 'none'; 
         });
 }
+
+// ===================== Find the Ball Under the Helmet Level =====================
+
+// Helmet Game Variables
+// Helmet Game Variables
+let ballPosition = null;
+let findBallGameInProgress = false;
+const helmetPositions = [
+    { left: 10, top: 25 },
+    { left: 140, top: 25 },
+    { left: 280, top: 25 }
+];
+
+function initializeFindBallGame() {
+    document.getElementById('find-ball-message').textContent = 'Click "Start Game" to begin!';
+    document.getElementById('find-ball-start-button').style.display = 'inline-block';
+    findBallGameInProgress = false;
+
+    // Reset helmets to initial positions
+    const helmets = document.querySelectorAll('.helmet-container');
+    helmets.forEach((helmet, index) => {
+        helmet.style.left = `${helmetPositions[index].left}px`;
+        helmet.style.top = `${helmetPositions[index].top}px`;
+        helmet.querySelector('.helmet').style.top = '-15px'; // Start with helmets lifted
+        helmet.style.transition = 'none';
+        helmet.querySelector('.helmet').style.transition = 'none';
+        helmet.querySelector('.helmet').style.pointerEvents = 'none';
+    });
+
+    // Remove any existing ball
+    const existingBall = document.getElementById('ball');
+    if (existingBall) {
+        existingBall.remove();
+    }
+
+    // Place the ball
+    ballPosition = Math.floor(Math.random() * 3);
+    console.log('Ball position:', ballPosition);
+    const ball = document.createElement('img');
+    ball.src = 'football.png';
+    ball.id = 'ball';
+    document.getElementById(`helmet-container-${ballPosition + 1}`).appendChild(ball);
+
+    // Allow time for setup before enabling the start button
+    setTimeout(() => {
+        document.getElementById('find-ball-start-button').disabled = false;
+    }, 500);
+}
+
+function startFindBallGame() {
+    document.getElementById('find-ball-start-button').style.display = 'none';
+    document.getElementById('find-ball-message').textContent = 'Shuffling...';
+    findBallGameInProgress = true;
+
+    // Set the helmets to a "raised" position before lowering
+    const ballHelmet = document.getElementById(`helmet${ballPosition + 1}`);
+    const otherHelmet1 = document.getElementById(`helmet${ballPosition === 0 ? 2 : 1}`);
+    const otherHelmet2 = document.getElementById(`helmet${ballPosition === 2 ? 1 : 3}`);
+
+    // Initially set helmets to raised position (offscreen)
+    ballHelmet.style.top = '-15px'; 
+    otherHelmet1.style.top = '-15px'; 
+    otherHelmet2.style.top = '-15px'; 
+
+    // Force reflow to ensure the "raised" position is applied
+    ballHelmet.offsetHeight; // Trigger reflow
+    otherHelmet1.offsetHeight; // Trigger reflow
+    otherHelmet2.offsetHeight; // Trigger reflow
+
+    // Add transition to move helmets down
+    ballHelmet.style.transition = 'top 0.5s ease-in-out';
+    otherHelmet1.style.transition = 'top 0.5s ease-in-out';
+    otherHelmet2.style.transition = 'top 0.5s ease-in-out';
+
+    // Set the helmets to move down to cover the ball after a short delay
+    setTimeout(() => {
+        ballHelmet.style.top = '65px'; 
+        otherHelmet1.style.top = '65px'; 
+        otherHelmet2.style.top = '65px'; 
+    }, 100); // Add a small delay to allow the raised position to apply
+
+    // Begin shuffling after the helmets lower
+    setTimeout(() => {
+        shuffleHelmets();
+    }, 600); // Wait for the helmets to lower before shuffling
+}
+
+
+
+function shuffleHelmets() {
+    const helmets = document.querySelectorAll('.helmet-container');
+    let shuffleCount = 10; // Increase shuffles for more randomness
+    let i = 0;
+
+    const shuffleInterval = setInterval(() => {
+        // Move each helmet to a random position
+        helmets.forEach(helmet => {
+            moveHelmetToRandomPosition(helmet);
+        });
+
+        i++;
+        if (i >= shuffleCount) {
+            clearInterval(shuffleInterval);
+            // Return helmets to three across but in random order
+            setTimeout(() => {
+                arrangeHelmetsInLine(helmets);
+                document.getElementById('find-ball-message').textContent = 'Guess which helmet has the ball!';
+                helmets.forEach(helmet => {
+                    helmet.querySelector('.helmet').style.pointerEvents = 'auto';
+                });
+            }, 500);
+        }
+    }, 500);
+}
+
+function moveHelmetToRandomPosition(helmet) {
+    const gameArea = document.getElementById('find-ball-game-area');
+    const maxLeft = gameArea.offsetWidth - helmet.offsetWidth; // Ensure helmet stays inside the container
+    const maxTop = gameArea.offsetHeight - helmet.offsetHeight;
+
+    // Randomly calculate new positions, ensuring they don't exceed the container's bounds
+    const randomLeft = Math.floor(Math.random() * maxLeft);
+    const randomTop = Math.floor(Math.random() * maxTop);
+
+    // Apply the calculated random positions
+    helmet.style.position = 'absolute'; // Ensure the helmet is absolutely positioned
+    helmet.style.transition = 'left 0.4s, top 0.4s';
+    helmet.style.left = `${randomLeft}px`;
+    helmet.style.top = `${randomTop}px`;
+}
+
+
+function arrangeHelmetsInLine(helmets) {
+    // Shuffle the helmetPositions array to randomize the order
+    const shuffledPositions = helmetPositions.slice().sort(() => Math.random() - 0.5);
+    helmets.forEach((helmet, index) => {
+        helmet.style.transition = 'left 0.4s, top 0.4s';
+        helmet.style.left = `${shuffledPositions[index].left}px`;
+        helmet.style.top = `${shuffledPositions[index].top}px`;
+    });
+}
+
+document.querySelectorAll('.helmet').forEach((helmet, index) => {
+    helmet.addEventListener('click', () => {
+        if (findBallGameInProgress) {
+            revealBall(index);
+        }
+    });
+});
+
+function revealBall(playerChoice) {
+    findBallGameInProgress = false;
+    const helmets = document.querySelectorAll('.helmet-container');
+    helmets.forEach((helmetContainer, index) => {
+        helmetContainer.querySelector('.helmet').style.pointerEvents = 'none';
+        if (index === ballPosition) {
+            // Lift the helmet to reveal the ball
+            const helmetImg = helmetContainer.querySelector('.helmet');
+            helmetImg.style.transition = 'top 0.5s';
+            helmetImg.style.top = '-70px'; // Helmet lifts up out of view
+        }
+    });
+    if (playerChoice === ballPosition) {
+        const ballGif = document.getElementById('ball-gif');
+        ballGif.style.display = 'block';
+        ballGif.innerHTML = '<img src="nicCage.gif" alt="Correct" />';
+        score += 1; // Update the score
+    } else {
+        const ballGif = document.getElementById('ball-gif');
+        ballGif.style.display = 'block';
+        ballGif.innerHTML = '<img src="ss_nope.gif" alt="Wrong" />';
+    }
+    // Proceed to the next level after a delay
+    setTimeout(() => {
+        // Uncomment if moving to next level
+        //showLevel('video-question-level');
+    }, 3000);
+}
+
+
+window.onload = function() {
+    initializeFindBallGame();
+};

@@ -10,7 +10,7 @@
     <div id="game-container">
         <img src="Pittsburgh_Steelers_logo.svg.png" alt="Steelers Logo" id="steelers-logo"></img>
         <!-- Start Screen: Capture User Name -->
-        <section id="start-screen" class="level active">
+        <section id="start-screen" class="level">
             <h1>Welcome to Ultimate Tailgater Challenge</h1>
             <form id="user-form">
                 <input type="text" id="first-name" placeholder="First Name" required>
@@ -54,6 +54,26 @@
             </div>
         </section>
 
+        <!-- Level 3: Find the Ball Under the Helmet -->
+        <section id="find-ball-level" class="level active">
+            <div id="ball-gif"></div>
+            <h2>Find the Ball Under the Helmet</h2>
+            <div id="find-ball-game-area">
+                <div class="helmet-container" id="helmet-container-1">
+                    <img src="helmet.png" class="helmet" id="helmet1">
+                </div>
+                <div class="helmet-container" id="helmet-container-2">
+                    <img src="helmet.png" class="helmet" id="helmet2">
+                </div>
+                <div class="helmet-container" id="helmet-container-3">
+                    <img src="helmet.png" class="helmet" id="helmet3">
+                </div>
+            </div>
+            <div id="find-ball-message">Click "Start Game" to begin!</div>
+            <button id="find-ball-start-button" onclick="startFindBallGame()">Start Game</button>
+        </section>
+
+
         <!-- Level 3: Video Question -->
         <section id="video-question-level" class="level">
             <h2>Daily Double</h2>
@@ -76,6 +96,7 @@
             <h2>Congratulations!</h2>
             <p>Your Score: <span id="final-score">0</span></p>
             <h2>Leaderboard</h2>
+            <div id="spinner" class="hidden"></div> <!-- Spinner element -->
             <table id="leaderboard-table" style="border-collapse: collapse; margin: 0 auto;">
             <thead>
             <tr>
