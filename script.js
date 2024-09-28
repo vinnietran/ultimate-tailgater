@@ -592,14 +592,16 @@ function revealBall(playerChoice) {
   }, 3000);
 }
 
-// ===================== Tic Tac Toe Level =====================
-const apiKey = '';  // Replace with your OpenAI API key
+let gameId = null;  // Unique game ID
 let ticTacToeBoard = ["", "", "", "", "", "", "", "", ""];
 let isGameOver = false;
 let playerSymbol = 'X';  // Player is 'X', GPT is 'O'
 
 function initializeTicTacToeGame() {
     console.log('Initializing Tic-Tac-Toe game...');
+    // Generate a unique game ID
+    gameId = generateGameId();
+    
     // Reset the board and status
     ticTacToeBoard = ["", "", "", "", "", "", "", "", ""];
     isGameOver = false;
@@ -612,8 +614,11 @@ function initializeTicTacToeGame() {
     });
 }
 
+function generateGameId() {
+    return Math.random().toString(36).substring(2, 15); // Simple unique game ID generator
+}
+
 function handlePlayerMove(e) {
-    console.log(e.target);
     const index = e.target.getAttribute('data-cell');
     
     if (ticTacToeBoard[index] !== "" || isGameOver) return;
@@ -625,6 +630,9 @@ function handlePlayerMove(e) {
     if (checkWinner('X')) {
         document.getElementById('status').textContent = "You win!";
         isGameOver = true;
+        const coachPic = document.getElementById("coach-cahr");
+        coachPic.style.display = "block";
+        coachPic.innerHTML = '<img src="angry_cowher.jpg" alt="You Win" />';
         document.getElementById('tic-tac-toe-next-button').classList.remove('hidden');
         return;
     }
@@ -636,53 +644,46 @@ function handlePlayerMove(e) {
     }
 
     // GPT's turn
-    document.getElementById('status').textContent = "GPT is thinking...";
+    document.getElementById('status').textContent = "Coach is thinking...";
     setTimeout(() => {
         callGPTForMove();
     }, 1000);
 }
 
 function callGPTForMove() {
-    const prompt = generateImprovedTicTacToePrompt();
-    //const prompt = generateTicTacToePrompt();
-    
-    fetch('https://api.openai.com/v1/chat/completions', {
+    // Send the current board state and the unique gameId to the backend
+    fetch('http://localhost:3000/api/tailgate/tictactoe', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            model: 'gpt-4o',  // Use GPT-4 or 3.5 turbo
-            messages: [
-                { role: 'system', content: 'You are a Tic-Tac-Toe AI. You play as "O". Your goal is to win or block the user.' },
-                { role: 'user', content: prompt }
-            ],
-            max_tokens: 100
-        })
+        body: JSON.stringify({ gameId, board: ticTacToeBoard }) // Send gameId and board
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
-        const gptMoveIndex = parseInt(data.choices[0].message.content.trim());
-        makeGPTMove(gptMoveIndex);
+        console.log('GPT response:', data);
+        const gptMoveIndex = data.move;  // Get the move index from the backend response
+        makeGPTMove(gptMoveIndex);  // Perform GPT's move
     })
     .catch(error => {
         console.error('Error:', error);
-        document.getElementById('status').textContent = "Error: GPT couldn't make a move.";
+        document.getElementById('status').textContent = "Error: Coach couldn't make a move.";
     });
 }
 
 function makeGPTMove(index) {
     console.log('GPT move:', index);
-    if (ticTacToeBoard[index] !== "") return;
+    if (ticTacToeBoard[index] !== "" || isGameOver) return;
     
     ticTacToeBoard[index] = 'O';
     document.querySelector(`.cell[data-cell="${index}"]`).textContent = 'O';
 
     if (checkWinner('O')) {
-        document.getElementById('status').textContent = "GPT wins!";
+        document.getElementById('status').textContent = "Coach Cahr wins!";
         isGameOver = true;
+        const coachPic = document.getElementById("coach-cahr");
+        coachPic.style.display = "block";
+        coachPic.innerHTML = '<img src="happy_cowher.jpg" alt="Coach Wins" />';
         document.getElementById('tic-tac-toe-next-button').classList.remove('hidden');
         return;
     }
@@ -706,57 +707,6 @@ function checkWinner(player) {
         return pattern.every(index => ticTacToeBoard[index] === player);
     });
 }
-
-function generateTicTacToePrompt() {
-    console.log(`${ticTacToeBoard.map((cell, index) => cell === "" ? index : cell).join(", ")}.`);
-    return `
-        The current Tic-Tac-Toe board is represented as:
-        ${ticTacToeBoard.map((cell, index) => cell === "" ? index : cell).join(", ")}.
-        X is the user, and O is GPT. What is the best move for O? Respond with only the index number and no additional text as I am plugging it into code.
-    `;
-}
-
-function generateImprovedTicTacToePrompt() {
-    const boardState = ticTacToeBoard.map((cell, index) => cell === "" ? index : cell).join(", ");
-
-    return `
-    You are playing Tic-Tac-Toe as "O" and the user is playing as "X". The goal is to either win by placing three O's in a row or block the user from winning by completing their row of X's. 
-
-    The current board layout is shown below:
-    
-    ${formatBoard(ticTacToeBoard)}
-
-    X represents the user's moves, O represents your moves, and numbers represent empty spaces.
-    
-    Please respond with the number of the position where you would place your next O (0-8) to either win or block the user.
-
-    Please do not choose an index that is already occupied or that you have already chosen.
-
-    Respond ONLY with the number of the position where you would like to place your O.
-    `;
-}
-
-function formatBoard(board) {
-    console.log(`
-    ${displayCell(board[0])} | ${displayCell(board[1])} | ${displayCell(board[2])}
-    --+---+--
-    ${displayCell(board[3])} | ${displayCell(board[4])} | ${displayCell(board[5])}
-    --+---+--
-    ${displayCell(board[6])} | ${displayCell(board[7])} | ${displayCell(board[8])}
-    `);
-    return `
-    ${displayCell(board[0])} | ${displayCell(board[1])} | ${displayCell(board[2])}
-    --+---+--
-    ${displayCell(board[3])} | ${displayCell(board[4])} | ${displayCell(board[5])}
-    --+---+--
-    ${displayCell(board[6])} | ${displayCell(board[7])} | ${displayCell(board[8])}
-    `;
-}
-
-function displayCell(cell) {
-    return cell === "" ? " " : cell;
-}
-
 
 // Initialize the Tic-Tac-Toe level when shown
 document.getElementById('tic-tac-toe-next-button').addEventListener('click', () => {
