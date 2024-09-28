@@ -593,7 +593,7 @@ function revealBall(playerChoice) {
 }
 
 // ===================== Tic Tac Toe Level =====================
-const apiKey = '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';  // Replace with your OpenAI API key
+const apiKey = '';  // Replace with your OpenAI API key
 let ticTacToeBoard = ["", "", "", "", "", "", "", "", ""];
 let isGameOver = false;
 let playerSymbol = 'X';  // Player is 'X', GPT is 'O'
