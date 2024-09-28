@@ -258,9 +258,13 @@ input::placeholder {
 #coach-cahr {
     display: none; /* Hidden until needed */
     text-align: center;
-    height: 200px;
-    width: 200px;
-    margin-top: 10px;
+}
+
+#coach-cahr img {
+    max-width: 100%;    /* Ensure the image does not overflow the container */
+    height: auto;       /* Maintain the aspect ratio */
+    max-height: 150px;  /* Set a maximum height for the image */
+    object-fit: contain; /* Ensures the image fits within the boundaries without being cropped */
 }
 
 #ball {
@@ -332,6 +336,8 @@ input::placeholder {
     grid-template-rows: repeat(3, 100px);
     gap: 5px;
     margin: 20px auto;
+    align-items: center;
+    margin-left: 40px;
 }
 
 .cell {
