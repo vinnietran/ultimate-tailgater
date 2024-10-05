@@ -64,18 +64,18 @@ const hangmanParts = [
 ];
 
 // Video Question Variables
-const videoQuestion = {
-  videoSrc: "Daily Double.mp4",
-  question:
-    "This Hall of Game coach is known for his innovative zone blitz scheme",
-  options: [
-    "Who is Chuck Noll?",
-    "Who is Joe Green?",
-    "Who is Dick Lebeau?",
-    "Who is Coach Cahr?",
-  ],
-  answer: "Who is Dick Lebeau?", // Set the correct option
-};
+// const videoQuestion = {
+//   videoSrc: "Daily Double.mp4",
+//   question:
+//     "This Hall of Game coach is known for his innovative zone blitz scheme",
+//   options: [
+//     "Who is Chuck Noll?",
+//     "Who is Joe Green?",
+//     "Who is Dick Lebeau?",
+//     "Who is Coach Cahr?",
+//   ],
+//   answer: "Who is Dick Lebeau?", // Set the correct option
+// };
 
 // Event Listener for Form Submission
 document.getElementById("user-form").addEventListener("submit", function (e) {
@@ -108,9 +108,9 @@ function showLevel(levelId) {
     case "find-ball-level":
       initializeFindBallGame();
       break;
-    case "video-question-level":
-      setupVideoQuestion();
-      break;
+    // case "video-question-level":
+    //   setupVideoQuestion();
+    //   break;
     case "tic-tac-toe-level": // Initialize Tic-Tac-Toe level
       initializeTicTacToeGame();
       break;
@@ -121,22 +121,22 @@ function showLevel(levelId) {
 }
 
 // Show a specific level
-function showLevel(levelId) {
-  console.log("Showing level:", levelId);
-  if (levelId !== "tic-tac-toe-level") {
-    return;
-  }
+// function showLevel(levelId) {
+//   console.log("Showing level:", levelId);
+//   if (levelId !== "tic-tac-toe-level") {
+//     return;
+//   }
 
-  document.querySelectorAll(".level").forEach((level) => {
-    level.classList.remove("active");
-  });
-  document.getElementById(levelId).classList.add("active");
+//   document.querySelectorAll(".level").forEach((level) => {
+//     level.classList.remove("active");
+//   });
+//   document.getElementById(levelId).classList.add("active");
 
-  if (levelId === "tic-tac-toe-level") {
-    initializeTicTacToeGame();
-    console.log("Tic-Tac-Toe level initialized");
-  }
-}
+//   if (levelId === "tic-tac-toe-level") {
+//     initializeTicTacToeGame();
+//     console.log("Tic-Tac-Toe level initialized");
+//   }
+// }
 
 // ===================== Trivia Level =====================
 function loadTriviaQuestion() {
@@ -281,44 +281,44 @@ function checkHangmanLoss() {
 }
 
 // ===================== Video Question Level =====================
-function setupVideoQuestion() {
-  const video = document.getElementById("video-question");
-  const optionsDiv = document.getElementById("video-question-options");
-  optionsDiv.classList.add("hidden");
+// function setupVideoQuestion() {
+//   const video = document.getElementById("video-question");
+//   const optionsDiv = document.getElementById("video-question-options");
+//   optionsDiv.classList.add("hidden");
 
-  // Reset options content
-  optionsDiv.innerHTML = "";
+//   // Reset options content
+//   optionsDiv.innerHTML = "";
 
-  // Set video source
-  video.src = videoQuestion.videoSrc;
+//   // Set video source
+//   video.src = videoQuestion.videoSrc;
 
-  // Listen for video end
-  video.onended = () => {
-    optionsDiv.classList.remove("hidden");
-    // Populate options
-    const questionText = document.createElement("p");
-    questionText.innerText = videoQuestion.question;
-    optionsDiv.appendChild(questionText);
-    videoQuestion.options.forEach((option) => {
-      const button = document.createElement("button");
-      button.innerText = option;
-      button.onclick = () => checkVideoAnswer(option);
-      optionsDiv.appendChild(button);
-    });
-  };
-}
+//   // Listen for video end
+//   video.onended = () => {
+//     optionsDiv.classList.remove("hidden");
+//     // Populate options
+//     const questionText = document.createElement("p");
+//     questionText.innerText = videoQuestion.question;
+//     optionsDiv.appendChild(questionText);
+//     videoQuestion.options.forEach((option) => {
+//       const button = document.createElement("button");
+//       button.innerText = option;
+//       button.onclick = () => checkVideoAnswer(option);
+//       optionsDiv.appendChild(button);
+//     });
+//   };
+// }
 
-function checkVideoAnswer(selectedOption) {
-  if (selectedOption === videoQuestion.answer) {
-    score += 2;
-  } else {
-  }
-  showLevel("completion-screen");
-  submitScore();
-  //getLeaderboardData()
-  document.getElementById("leaderboard-table").classList.add("hidden");
-  setInterval(getLeaderboardData, 10000); // Refresh leaderboard every second
-}
+// function checkVideoAnswer(selectedOption) {
+//   if (selectedOption === videoQuestion.answer) {
+//     score += 2;
+//   } else {
+//   }
+//   showLevel("completion-screen");
+//   submitScore();
+//   //getLeaderboardData()
+//   document.getElementById("leaderboard-table").classList.add("hidden");
+//   setInterval(getLeaderboardData, 10000); // Refresh leaderboard every second
+// }
 
 // ===================== Completion Screen =====================
 function displayFinalScore() {
@@ -352,6 +352,7 @@ function submitScore() {
 }
 
 function getLeaderboardData() {
+  console.log("Fetching leaderboard data...");
   fetch(GOOGLE_SHEET_WEB_APP_URL)
     .then((response) => response.json())
     .then((data) => {
@@ -588,10 +589,11 @@ function revealBall(playerChoice) {
   // Proceed to the next level after a delay
   setTimeout(() => {
     // Uncomment if moving to next level
-    showLevel("video-question-level");
+    showLevel("tic-tac-toe-level");
   }, 3000);
 }
 
+// ===================== Tic Tac Toe Level =====================
 let gameId = null; // Unique game ID
 let ticTacToeBoard = ["", "", "", "", "", "", "", "", ""];
 let isGameOver = false;
@@ -628,22 +630,21 @@ function handlePlayerMove(e) {
   e.target.textContent = "X";
 
   if (checkWinner("X")) {
-    document.getElementById("status").textContent = "You win!";
-    isGameOver = true;
-    const coachPic = document.getElementById("coach-cahr");
-    coachPic.style.display = "inline-block";
-    coachPic.innerHTML = '<img src="angry_cowher.jpg" alt="You Win" />';
-    document
-      .getElementById("tic-tac-toe-next-button")
-      .classList.remove("hidden");
+    endGame(
+      "You win!",
+      "angry_cowher.jpg",
+      "You Win",
+      true // Indicating that the player is the winner
+    );
     return;
   }
 
   if (ticTacToeBoard.every((cell) => cell !== "")) {
-    document.getElementById("status").textContent = "It's a tie!";
-    document
-      .getElementById("tic-tac-toe-next-button")
-      .classList.remove("hidden");
+    endGame(
+      "It's a tie!",
+      "cowher_tie.jpg", // Replace with an appropriate tie image
+      "Tie"
+    );
     return;
   }
 
@@ -664,24 +665,18 @@ function callGPTForMove() {
     body: JSON.stringify({ gameId, board: ticTacToeBoard }), // Send gameId and board
   })
     .then((response) => {
-      // Get the response code (status code)
       const statusCode = response.status;
 
-      if (statusCode === 200) {
-        // If the status code is 200 (OK), proceed with parsing the response
-        return response.json(); // Parse the response body as JSON
-      } else {
-        console.error("Error: ", statusCode);
-        isGameOver = true;
-        const coachPic = document.getElementById("coach-cahr");
-        coachPic.style.display = "inline-block";
-        coachPic.innerHTML = '<img src="angry_cowher.jpg" alt="You Win" />';
-        document
-          .getElementById("tic-tac-toe-next-button")
-          .classList.remove("hidden");
-        document.getElementById("status").textContent =
-          "Error: Coach fell asleep and couldn't make a move. You win!";;
+      if (statusCode !== 200) {
+        endGame(
+          "Error: Coach fell asleep and couldn't make a move. You win!",
+          "angry_cowher.jpg",
+          "You Win",
+          true
+        );
+        throw new Error("Invalid status code: " + statusCode);
       }
+      return response.json();
     })
     .then((data) => {
       console.log("GPT response:", data);
@@ -690,15 +685,12 @@ function callGPTForMove() {
     })
     .catch((error) => {
       console.error("Error:", error);
-      isGameOver = true;
-      const coachPic = document.getElementById("coach-cahr");
-      coachPic.style.display = "inline-block";
-      coachPic.innerHTML = '<img src="angry_cowher.jpg" alt="You Win" />';
-      document
-        .getElementById("tic-tac-toe-next-button")
-        .classList.remove("hidden");
-      document.getElementById("status").textContent =
-        "Error: Coach couldn't make a move. You win!";
+      endGame(
+        "Error: Coach couldn't make a move. You win!",
+        "angry_cowher.jpg",
+        "You Win",
+        true
+      );
     });
 }
 
@@ -710,26 +702,25 @@ function makeGPTMove(index) {
   document.querySelector(`.cell[data-cell="${index}"]`).textContent = "O";
 
   if (checkWinner("O")) {
-    document.getElementById("status").textContent = "Coach Cahr wins!";
-    isGameOver = true;
-    const coachPic = document.getElementById("coach-cahr");
-    coachPic.style.display = "block";
-    coachPic.innerHTML = '<img src="happy_cowher.jpg" alt="Coach Wins" />';
-    document
-      .getElementById("tic-tac-toe-next-button")
-      .classList.remove("hidden");
+    endGame(
+      "Coach Cahr wins!",
+      "happy_cowher.jpg",
+      "Coach Wins"
+    );
     return;
   }
 
   if (ticTacToeBoard.every((cell) => cell !== "")) {
-    document.getElementById("status").textContent = "It's a tie!";
-    document
-      .getElementById("tic-tac-toe-next-button")
-      .classList.remove("hidden");
+    endGame(
+      "It's a tie!",
+      "neutral_cowher.jpg", // Replace with an appropriate tie image
+      "Tie"
+    );
   } else {
     document.getElementById("status").textContent = "Your move!";
   }
 }
+
 
 function checkWinner(player) {
   const winningPatterns = [
@@ -755,6 +746,43 @@ document
     initializeTicTacToeGame();
   });
 
-window.onload = function () {
-  initializeTicTacToeGame();
-};
+// window.onload = function () {
+//   initializeTicTacToeGame();
+// };
+
+function endGame(message, imageUrl, imageAlt, isWinner = false) {
+  console.log("Game over:", message);
+  // Show status message and image
+  document.getElementById("status").textContent = message;
+  isGameOver = true;
+
+  const coachPic = document.getElementById("coach-cahr");
+  coachPic.style.display = "inline-block";
+  coachPic.innerHTML = `<img src="${imageUrl}" alt="${imageAlt}" />`;
+
+  // Show the "Next" button for moving to the next level
+  document.getElementById("tic-tac-toe-next-button").classList.remove("hidden");
+
+  // Only update the score if the player won or based on level logic
+  if (isWinner) {
+    score += 1; // Add to score if the player won this level
+  }
+
+  // Notify the parent game controller (if any) that this level has finished
+  if (typeof updateGlobalGameStatus === 'function') {
+    updateGlobalGameStatus(); // Call a parent function to move to the next level or update overall score
+  }
+
+  endTheWholeGame();
+
+  setTimeout(() => {
+    // Uncomment if moving to next level
+    showLevel("completion-screen");
+  }, 2000);
+}
+
+function endTheWholeGame() {
+  submitScore();
+  document.getElementById("leaderboard-table").classList.add("hidden");
+  setInterval(getLeaderboardData, 10000); // Refresh leaderboard every second
+}
