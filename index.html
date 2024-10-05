@@ -77,7 +77,7 @@
 
 
         <!-- Level 3: Video Question -->
-        <section id="video-question-level" class="level">
+        <!-- <section id="video-question-level" class="level">
             <h2>Daily Double</h2>
             <video id="video-question" controls autoplay muted playsinline>
                 <source src="Daily Double.mp4" type="video/mp4">
@@ -91,7 +91,29 @@
                 <button onclick="checkVideoAnswer('Who is Dick Lebeau?')">Option 3</button>
                 <button onclick="checkVideoAnswer('Who is Coach Cahr?')">Option 4</button>
             </div>
-        </section>
+        </section> -->
+
+        <!-- Level 5: Tic Tac Toe -->
+            <section id="tic-tac-toe-level" class="level">
+                <h2>Tic Tac Toe</h2>
+                <p>Play against Coach Cahr! You are X, and Coach Cahr is O.</p>
+                <div id="coach-cahr"></div>
+                <div id="status">Your move!</div>
+                <div id="game-board" class="tic-tac-toe-board">
+                    <!-- Tic-Tac-Toe board cells -->
+                    <div class="cell" data-cell="0"></div>
+                    <div class="cell" data-cell="1"></div>
+                    <div class="cell" data-cell="2"></div>
+                    <div class="cell" data-cell="3"></div>
+                    <div class="cell" data-cell="4"></div>
+                    <div class="cell" data-cell="5"></div>
+                    <div class="cell" data-cell="6"></div>
+                    <div class="cell" data-cell="7"></div>
+                    <div class="cell" data-cell="8"></div>
+                </div>
+                <!-- <button id="tic-tac-toe-next-button" class="hidden" onclick="showLevel('completion-screen')" onclick="endTheWholeGame()">Finish Game</button> -->
+            </section>
+
 
         <!-- Completion Screen -->
         <section id="completion-screen" class="level" style="text-align: center;">
