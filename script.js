@@ -4,45 +4,36 @@ let userData = { firstName: "", lastName: "" };
 // Trivia Questions (Expand as needed)
 const triviaQuestions = [
   {
-    question: "What year were the Steelers founded?",
-    options: ["1933", "1945", "1960", "1970"],
-    answer: "1933",
+    question:
+      "Which Steelers player holds the record for most sacks in a single season?",
+    options: ["Joey Porter", "James Harrison", "T.J. Watt", "L.C. Greenwood"],
+    answer: "T.J. Watt",
   },
   {
     question:
-      "Who was the first Pittsburgh Steelers player inducted into the Pro Football Hall of Fame?",
-    options: ["Terry Bradshaw", "Ernie Stautner", "Joe Green", "Coach Cahr"],
-    answer: "Ernie Stautner",
+      "What is the penalty for intentional grounding in the NFL?",
+    options: ["5 yards", "Loss of down", "10 yards", "Loss of down and spot foul"],
+    answer: "Loss of down and spot foul",
   },
   {
     question:
-      "In an NFL game, if an offensive player moves or flinches before the ball is snapped, what is the penalty called?",
-    options: ["Touchdown", "Pass Interference", "Delay of Game", "False Start"],
-    answer: "False Start",
+      "What Pittsburgh river is formed by the confluence of the Allegheny and Monongahela Rivers?",
+    options: ["Ohio River", "Mississippi River", "Potomac River", "Susquehanna River"],
+    answer: "Ohio River",
   },
   {
     question:
-      "Who is the current Quarterbacks Coach for the Pittsburgh Steelers?",
-    options: ["Tom Arth", "Kordell Stewart", "Matt Canada", "Coach Cahr"],
-    answer: "Tom Arth",
+      "What is the maximum number of challenges each NFL team gets per game?",
+    options: ["1", "2", "3", "Unlimited"],
+    answer: "2",
   },
   {
     question:
-      "What is the name of the front office position that Omar Khan holds for the Pittsburgh Steelers?",
-    options: ["Scout", "General Manager", "Draft Specialist", "Running Back"],
-    answer: "General Manager",
-  },
-  {
-    question:
-      "What happens if the ball carrier is tackled in their own end zone?",
-    options: ["TouchDahn!", "TouchBACK!", "Safety", "Coach Cahr"],
-    answer: "Hypocycloid",
-  },
-  {
-    question: "What shape is featured on the Pittsburgh Steelers logo?",
-    options: ["Rombous", "Hypocycloid", "Diamond", "Square"],
-    answer: "Hypocycloid",
-  },
+      "If a punt goes out of bounds in the field of play without being touched, where does the receiving team start its drive?",
+    options: ["At the 20-yard line", "At the spot where the ball went out of bounds", "At midfield", "At the 10-yard line"],
+    answer: "At the spot where the ball went out of bounds",
+  }
+  
   // Add more trivia questions here
 ];
 
@@ -102,9 +93,9 @@ function showLevel(levelId) {
     case "trivia-level":
       loadTriviaQuestion();
       break;
-    case "hangman-level":
-      startHangmanGame();
-      break;
+    // case "hangman-level":
+    //   startHangmanGame();
+    //   break;
     case "find-ball-level":
       initializeFindBallGame();
       break;
@@ -154,7 +145,7 @@ function loadTriviaQuestion() {
     });
   } else {
     // If no more trivia questions, move to next level
-    showLevel("hangman-level");
+    showLevel("find-ball-level");
   }
 }
 
@@ -761,7 +752,7 @@ function endGame(message, imageUrl, imageAlt, isWinner = false) {
   coachPic.innerHTML = `<img src="${imageUrl}" alt="${imageAlt}" />`;
 
   // Show the "Next" button for moving to the next level
-  document.getElementById("tic-tac-toe-next-button").classList.remove("hidden");
+  //document.getElementById("tic-tac-toe-next-button").classList.remove("hidden");
 
   // Only update the score if the player won or based on level logic
   if (isWinner) {
