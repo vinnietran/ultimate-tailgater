@@ -23,9 +23,9 @@ const triviaQuestions = [
   },
   {
     question:
-      "What is the maximum number of challenges each NFL team gets per game?",
+      "What is the maximum number of challenges allowable per team, per game?",
     options: ["1", "2", "3", "Unlimited"],
-    answer: "2",
+    answer: "3",
   },
   {
     question:
@@ -133,14 +133,14 @@ function showLevel(levelId) {
 function loadTriviaQuestion() {
   if (currentTriviaQuestionIndex < triviaQuestions.length) {
     const currentQuestion = triviaQuestions[currentTriviaQuestionIndex];
-    document.getElementById("trivia-question").innerText =
-      currentQuestion.question;
+    document.getElementById("trivia-question").innerText = currentQuestion.question;
     const optionsDiv = document.querySelector("#trivia-level .options");
     optionsDiv.innerHTML = ""; // Clear previous options
+
     currentQuestion.options.forEach((option) => {
       const button = document.createElement("button");
       button.innerText = option;
-      button.onclick = () => checkTriviaAnswer(option);
+      button.onclick = () => checkTriviaAnswer(button, option);
       optionsDiv.appendChild(button);
     });
   } else {
@@ -149,127 +149,141 @@ function loadTriviaQuestion() {
   }
 }
 
-function checkTriviaAnswer(selectedOption) {
+function checkTriviaAnswer(selectedButton, selectedOption) {
   const currentQuestion = triviaQuestions[currentTriviaQuestionIndex];
-  if (selectedOption === currentQuestion.answer) {
-    score += 1;
-    currentTriviaQuestionIndex += 1;
-    loadTriviaQuestion();
-  } else {
-    currentTriviaQuestionIndex += 1;
-    loadTriviaQuestion();
+  const optionsDiv = document.querySelector("#trivia-level .options");
+
+  // Highlight the correct answer in green
+  Array.from(optionsDiv.children).forEach((button) => {
+    if (button.innerText === currentQuestion.answer) {
+      button.style.backgroundColor = "green";
+      button.style.color = "white";
+    }
+  });
+
+  // If the selected answer is incorrect, highlight it in red
+  if (selectedOption !== currentQuestion.answer) {
+    selectedButton.style.backgroundColor = "red";
+    selectedButton.style.color = "white";
   }
+
+  // Delay before moving to the next question
+  setTimeout(() => {
+    currentTriviaQuestionIndex += 1;
+    loadTriviaQuestion();
+  }, 2000); // Adjust the delay time as needed (1.5 seconds here)
 }
+
 
 // ===================== Hangman Level =====================
-function startHangmanGame() {
-  selectedWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
-  correctLetters = [];
-  wrongLetters = [];
-  displayWord();
-  displayLetters();
-  document.getElementById("wrong-letters").innerText = "";
-  hangmanParts.forEach((part) => {
-    document.getElementById(part).style.display = "none";
-  });
-}
+// function startHangmanGame() {
+//   selectedWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
+//   correctLetters = [];
+//   wrongLetters = [];
+//   displayWord();
+//   displayLetters();
+//   document.getElementById("wrong-letters").innerText = "";
+//   hangmanParts.forEach((part) => {
+//     document.getElementById(part).style.display = "none";
+//   });
+// }
 
-function displayWord() {
-  const wordContainer = document.getElementById("word");
-  wordContainer.innerHTML = `
-        ${selectedWord
-          .split("")
-          .map(
-            (letter) => `
-                    <span class="letter">
-                        ${correctLetters.includes(letter) ? letter : "_"}
-                    </span>
-                `
-          )
-          .join("")}
-    `;
-}
+// function displayWord() {
+//   const wordContainer = document.getElementById("word");
+//   wordContainer.innerHTML = `
+//         ${selectedWord
+//           .split("")
+//           .map(
+//             (letter) => `
+//                     <span class="letter">
+//                         ${correctLetters.includes(letter) ? letter : "_"}
+//                     </span>
+//                 `
+//           )
+//           .join("")}
+//     `;
+// }
 
-function displayWordLoss() {
-  const wordContainer = document.getElementById("word");
-  wordContainer.innerHTML = `
-        ${selectedWord
-          .split("")
-          .map(
-            (letter) => `
-                    <span class="letter">
-                        ${correctLetters.includes(letter) ? letter : letter}
-                    </span>
-                `
-          )
-          .join("")}
-    `;
-}
+// function displayWordLoss() {
+//   const wordContainer = document.getElementById("word");
+//   wordContainer.innerHTML = `
+//         ${selectedWord
+//           .split("")
+//           .map(
+//             (letter) => `
+//                     <span class="letter">
+//                         ${correctLetters.includes(letter) ? letter : letter}
+//                     </span>
+//                 `
+//           )
+//           .join("")}
+//     `;
+// }
 
-function displayLetters() {
-  const lettersContainer = document.getElementById("letters");
-  lettersContainer.innerHTML = "abcdefghijklmnopqrstuvwxyz"
-    .split("")
-    .map(
-      (letter) => `
-        <span class="letter" onclick="handleGuess('${letter}')">${letter}</span>
-    `
-    )
-    .join("");
-}
+// function displayLetters() {
+//   const lettersContainer = document.getElementById("letters");
+//   lettersContainer.innerHTML = "abcdefghijklmnopqrstuvwxyz"
+//     .split("")
+//     .map(
+//       (letter) => `
+//         <span class="letter" onclick="handleGuess('${letter}')">${letter}</span>
+//     `
+//     )
+//     .join("");
+// }
 
-function handleGuess(letter) {
-  if (selectedWord.includes(letter)) {
-    if (!correctLetters.includes(letter)) {
-      correctLetters.push(letter);
-      displayWord();
-      checkHangmanWin();
-    }
-  } else {
-    if (!wrongLetters.includes(letter)) {
-      wrongLetters.push(letter);
-      document.getElementById(
-        "wrong-letters"
-      ).innerText = `Wrong Letters: ${wrongLetters.join(", ")}`;
-      const part = hangmanParts[wrongLetters.length - 1];
-      if (part) {
-        document.getElementById(part).style.display = "block";
-      }
-      checkHangmanLoss();
-    }
-  }
-  // Disable the clicked letter
-  document.querySelectorAll(`#letters .letter`).forEach((el) => {
-    if (el.innerText.toLowerCase() === letter) {
-      el.style.pointerEvents = "none";
-      el.style.color = "gray";
-    }
-  });
-}
+// function handleGuess(letter) {
+//   if (selectedWord.includes(letter)) {
+//     if (!correctLetters.includes(letter)) {
+//       correctLetters.push(letter);
+//       displayWord();
+//       checkHangmanWin();
+//     }
+//   } else {
+//     if (!wrongLetters.includes(letter)) {
+//       wrongLetters.push(letter);
+//       document.getElementById(
+//         "wrong-letters"
+//       ).innerText = `Wrong Letters: ${wrongLetters.join(", ")}`;
+//       const part = hangmanParts[wrongLetters.length - 1];
+//       if (part) {
+//         document.getElementById(part).style.display = "block";
+//       }
+//       checkHangmanLoss();
+//     }
+//   }
+//   // Disable the clicked letter
+//   document.querySelectorAll(`#letters .letter`).forEach((el) => {
+//     if (el.innerText.toLowerCase() === letter) {
+//       el.style.pointerEvents = "none";
+//       el.style.color = "gray";
+//     }
+//   });
+// }
 
-function checkHangmanWin() {
-  const wordContainer = document.getElementById("word");
-  const innerWord = wordContainer.innerText.replace(/\s/g, "");
-  if (innerWord === selectedWord) {
-    document.getElementById("hangman-message").innerHTML =
-      '<img src="correct-that-is-correct.gif" alt="Correct" />';
-    score += 1;
-    setTimeout(() => {
-      showLevel("find-ball-level");
-    }, 5000);
-  }
-}
+// function checkHangmanWin() {
+//   const wordContainer = document.getElementById("word");
+//   const innerWord = wordContainer.innerText.replace(/\s/g, "");
+//   if (innerWord === selectedWord) {
+//     document.getElementById("hangman-message").innerHTML =
+//       '<img src="correct-that-is-correct.gif" alt="Correct" />';
+//     score += 1;
+//     setTimeout(() => {
+//       showLevel("find-ball-level");
+//     }, 5000);
+//   }
+// }
 
-function checkHangmanLoss() {
-  if (wrongLetters.length === hangmanParts.length) {
-    document.getElementById("hangman-message").innerHTML =
-      '<img src="wrong-not.gif" alt="WRONG" />';
-    displayWordLoss();
-    setTimeout(() => {
-      showLevel("find-ball-level");
-    }, 3000);
-  }
-}
+// function checkHangmanLoss() {
+//   if (wrongLetters.length === hangmanParts.length) {
+//     document.getElementById("hangman-message").innerHTML =
+//       '<img src="wrong-not.gif" alt="WRONG" />';
+//     displayWordLoss();
+//     setTimeout(() => {
+//       showLevel("find-ball-level");
+//     }, 3000);
+//   }
+// }
 
 // ===================== Video Question Level =====================
 // function setupVideoQuestion() {
