@@ -1,5 +1,12 @@
 let score = 0;
 let userData = { firstName: "", lastName: "" };
+const apiEndpoint = 'http://localhost:3000/api/tailgate/cluegame';
+var sessionId = '';
+
+// Function to generate a short, unique session ID
+function generateSessionId() {
+  return 'session-' + Math.random().toString(36).substring(2, 10); // Generates a random string
+}
 
 // Trivia Questions (Expand as needed)
 const triviaQuestions = [
@@ -105,6 +112,10 @@ function showLevel(levelId) {
     case "tic-tac-toe-level": // Initialize Tic-Tac-Toe level
       initializeTicTacToeGame();
       break;
+    case "yinzer-whisperer-level": // Initialize Tic-Tac-Toe level
+      console.log("Starting Yinzer Whisperer game...");
+      startGuessingGame(apiEndpoint, sessionId);
+      break;
     case "completion-screen":
       displayFinalScore();
       break;
@@ -112,12 +123,12 @@ function showLevel(levelId) {
 }
 
 // Show a specific level
-// function showLevel(levelId) {
-//   console.log("Showing level:", levelId);
-//   if (levelId !== "tic-tac-toe-level") {
-//     return;
-//   }
-
+function showLevel(levelId) {
+  console.log("Showing level:", levelId);
+  if (levelId !== "yinzer-whisperer-level") {
+    return;
+  }
+}
 //   document.querySelectorAll(".level").forEach((level) => {
 //     level.classList.remove("active");
 //   });
@@ -171,7 +182,7 @@ function checkTriviaAnswer(selectedButton, selectedOption) {
   setTimeout(() => {
     currentTriviaQuestionIndex += 1;
     loadTriviaQuestion();
-  }, 2000); // Adjust the delay time as needed (1.5 seconds here)
+  }, 1000); // Adjust the delay time as needed (1.5 seconds here)
 }
 
 
@@ -778,11 +789,11 @@ function endGame(message, imageUrl, imageAlt, isWinner = false) {
     updateGlobalGameStatus(); // Call a parent function to move to the next level or update overall score
   }
 
-  endTheWholeGame();
+  //endTheWholeGame();
 
   setTimeout(() => {
     // Uncomment if moving to next level
-    showLevel("completion-screen");
+    showLevel("yinzer-whisperer-level");
   }, 2000);
 }
 
@@ -791,3 +802,73 @@ function endTheWholeGame() {
   document.getElementById("leaderboard-table").classList.add("hidden");
   setInterval(getLeaderboardData, 10000); // Refresh leaderboard every second
 }
+
+
+// Function to start the guessing game
+function startGuessingGame(apiEndpoint) {
+  console.log("Starting Yinzer Whisperer game with endpoint:", apiEndpoint);
+
+  sessionId = generateSessionId(); // Generate a unique session ID
+
+  // Show the thinking placeholder
+  document.getElementById("thinking").style.display = "block";
+  document.getElementById("yinzer-message").innerText = "Starting game...";
+
+  // Send initial POST request to start the game
+  fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ sessionId })
+  })
+  .then(response => response.json())
+  .then(data => {
+      // Hide the thinking placeholder and display GPT's response
+      document.getElementById("thinking").style.display = "none";
+      document.getElementById("yinzer-message").innerText = data.clue;
+
+      // Show Yes/No buttons for user response
+      document.getElementById("answer-buttons").style.display = "block";
+      document.getElementById("start-game-section").style.display = "none"; // Hide start button
+  })
+  .catch(error => {
+      console.error("Error starting game:", error);
+      document.getElementById("yinzer-message").innerText = "Error starting game. Please try again.";
+  });
+}
+
+// Function to send Yes/No response during the guessing game
+function sendResponse(playerResponse, sessionId) {
+  console.log("Sending response:", playerResponse);
+
+  // Display the thinking placeholder and temporarily hide Yes/No buttons
+  document.getElementById("thinking").style.display = "block";
+  document.getElementById("answer-buttons").style.display = "none";
+
+  // Send POST request with user response
+  fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ sessionId, playerResponse })
+  })
+  .then(response => response.json())
+  .then(data => {
+      // Hide thinking placeholder and display GPT's new response
+      document.getElementById("thinking").style.display = "none";
+      document.getElementById("yinzer-message").innerText = data.clue;
+
+      // Show Yes/No buttons again for the next question
+      document.getElementById("answer-buttons").style.display = "block";
+  })
+  .catch(error => {
+      console.error("Error sending response:", error);
+      document.getElementById("yinzer-message").innerText = "Error processing response. Please try again.";
+      document.getElementById("answer-buttons").style.display = "block"; // Show buttons in case of error
+  });
+}
+
+
+
