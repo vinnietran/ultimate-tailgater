@@ -359,4 +359,25 @@ input::placeholder {
     cursor: pointer;
 }
 
+/* Styling for the message box */
+.message-box {
+    background-color: #f0f8ff; /* Light blue to make it stand out */
+    border: 2px solid #007acc; /* Steel blue border for emphasis */
+    border-radius: 10px;
+    padding: 15px;
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+    color: #333; /* Dark color for readability */
+    font-size: 1.2em;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: background-color 0.5s ease; /* Smooth color transition */
+}
+
+/* Animation for new messages */
+.message-box.new-message {
+    background-color: #e0f7fa; /* Lighter blue for when new message arrives */
+}
+
+
 /* Optional: Add any additional styles for the game area */

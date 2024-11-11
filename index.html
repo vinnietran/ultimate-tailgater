@@ -115,31 +115,27 @@
             </section>
 
 <!-- Yinzer Whisperer Game Interface -->
-<section id="yinzer-whisperer-level" class="leve active">
-    <h2>The Yinzer Whisperer</h2>
-    <p>Think of a Steelers player, and The Yinzer Whisperer will try to guess who it is by asking questions!</p>
+<section id="yinzer-whisperer-level" class="level active">
+    <h2>Stump The Yinzer Whisperer</h2>
+    <h3>Think of a Steelers player, past or present and The Yinzer Whisper shall attempt to read your mind!</h3>
 
-    <!-- Start Game Button -->
-    <div id="start-game-section">
-        <button onclick="startGuessingGame(apiEndpoint, sessionId)">Start Game</button>
-    </div>
 
     <img src="yinzerwhisperer.webp" alt="whisperer">
 
     <!-- Messaging Area -->
-    <div id="yinzer-messages">
+    <div id="yinzer-messages" class="message-box">
         <p id="yinzer-message">Welcome! Click 'Start Game' to begin.</p>
     </div>
+
+        <!-- Start Game Button -->
+        <div id="start-game-section">
+            <button onclick="startGuessingGame(apiEndpoint, sessionId)">Start Game</button>
+        </div>
 
     <!-- Yes/No Buttons (hidden initially) -->
     <div id="answer-buttons" style="display: none;">
         <button onclick="sendResponse('yes', sessionId)">Yes</button>
         <button onclick="sendResponse('no', sessionId)">No</button>
-    </div>
-
-    <!-- "Thinking" Placeholder -->
-    <div id="thinking" style="display: none;">
-        <p>The Yinzer Whisperer is thinking...</p>
     </div>
 </section>
 

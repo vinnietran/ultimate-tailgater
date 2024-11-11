@@ -811,7 +811,6 @@ function startGuessingGame(apiEndpoint) {
   sessionId = generateSessionId(); // Generate a unique session ID
 
   // Show the thinking placeholder
-  document.getElementById("thinking").style.display = "block";
   document.getElementById("yinzer-message").innerText = "Starting game...";
 
   // Send initial POST request to start the game
@@ -825,8 +824,7 @@ function startGuessingGame(apiEndpoint) {
   .then(response => response.json())
   .then(data => {
       // Hide the thinking placeholder and display GPT's response
-      document.getElementById("thinking").style.display = "none";
-      document.getElementById("yinzer-message").innerText = data.clue;
+      displayMessage(data.clue);
 
       // Show Yes/No buttons for user response
       document.getElementById("answer-buttons").style.display = "block";
@@ -843,7 +841,7 @@ function sendResponse(playerResponse, sessionId) {
   console.log("Sending response:", playerResponse);
 
   // Display the thinking placeholder and temporarily hide Yes/No buttons
-  document.getElementById("thinking").style.display = "block";
+  displayMessage("The Yinzer Whisper is Thinking...");
   document.getElementById("answer-buttons").style.display = "none";
 
   // Send POST request with user response
@@ -857,8 +855,7 @@ function sendResponse(playerResponse, sessionId) {
   .then(response => response.json())
   .then(data => {
       // Hide thinking placeholder and display GPT's new response
-      document.getElementById("thinking").style.display = "none";
-      document.getElementById("yinzer-message").innerText = data.clue;
+      displayMessage(data.clue);
 
       // Show Yes/No buttons again for the next question
       document.getElementById("answer-buttons").style.display = "block";
@@ -868,6 +865,40 @@ function sendResponse(playerResponse, sessionId) {
       document.getElementById("yinzer-message").innerText = "Error processing response. Please try again.";
       document.getElementById("answer-buttons").style.display = "block"; // Show buttons in case of error
   });
+}
+
+function displayMessage(message) {
+  const messageBox = document.getElementById("yinzer-messages");
+  const messageText = document.getElementById("yinzer-message");
+
+  // Set new message and add animation class
+  messageText.innerText = message;
+  messageBox.classList.add("new-message");
+
+  // Remove the animation class after a short delay
+  setTimeout(() => {
+      messageBox.classList.remove("new-message");
+  }, 500); // 500ms delay for animation effect
+}
+
+let playerName = ""; // Variable to store the player's input
+
+// Function to capture the player’s input and start the game
+function submitPlayerName() {
+    // Get the player's input
+    playerName = document.getElementById("player-name").value.trim();
+
+    // Check if the input is empty
+    if (playerName === "") {
+        alert("Please enter the name of the player you're thinking of.");
+        return;
+    }
+
+    // Hide the input section after submission
+    document.getElementById("player-input-section").style.display = "none";
+
+    // Start the guessing game
+    startGuessingGame(apiEndpoint, sessionId);
 }
 
 
