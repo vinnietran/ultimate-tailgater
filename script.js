@@ -806,6 +806,7 @@ function endTheWholeGame() {
 
 // Function to start the guessing game
 function startGuessingGame(apiEndpoint) {
+  document.getElementById("steelers-logo").style.display = "none"; // Hide the Steelers logo
   console.log("Starting Yinzer Whisperer game with endpoint:", apiEndpoint);
 
   sessionId = generateSessionId(); // Generate a unique session ID
@@ -823,6 +824,7 @@ function startGuessingGame(apiEndpoint) {
   })
   .then(response => response.json())
   .then(data => {
+    console.log("Game started:", data);
       // Hide the thinking placeholder and display GPT's response
       displayMessage(data.clue);
 
@@ -856,9 +858,18 @@ function sendResponse(playerResponse, sessionId) {
   .then(data => {
       // Hide thinking placeholder and display GPT's new response
       displayMessage(data.clue);
+      console.log(data)
 
       // Show Yes/No buttons again for the next question
-      document.getElementById("answer-buttons").style.display = "block";
+      if (data.questionsCount < 10) {
+        document.getElementById("answer-buttons").style.display = "block";
+      } else if (data.questionsCount === 10) {
+        document.getElementById("answer-buttons").style.display = "none"; // Hide buttons after 10 questions
+        document.getElementById("end-game-buttons").style.display = "block"; // Show Steelers logo
+      } else {
+        document.getElementById("end-game-buttons").style.display = "none"; // Show Steelers logo 
+        endTheWholeGame();     
+      }
   })
   .catch(error => {
       console.error("Error sending response:", error);
@@ -899,6 +910,10 @@ function submitPlayerName() {
 
     // Start the guessing game
     startGuessingGame(apiEndpoint, sessionId);
+}
+
+function stumpedWhisperer (score) {
+  score += 1;
 }
 
 

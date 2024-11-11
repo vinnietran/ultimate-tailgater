@@ -137,6 +137,11 @@
         <button onclick="sendResponse('yes', sessionId)">Yes</button>
         <button onclick="sendResponse('no', sessionId)">No</button>
     </div>
+
+    <div id="end-game-buttons" style="display: none;">
+        <button onclick="sendResponse('yes you got it! send something in response but then the game is over', sessionId)">Yup, you got it!</button>
+        <button onclick="sendResponse('nope i stumped you! send something in response but no other guesses as the game is over', sessionId), stumpedWhisperer(score)">Nope! Stupmed you!</button>
+    </div>
 </section>
 
 
