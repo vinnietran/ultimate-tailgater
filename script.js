@@ -1,6 +1,6 @@
 let score = 0;
 let userData = { firstName: "", lastName: "" };
-const apiEndpoint = 'http://localhost:3000/api/tailgate/cluegame';
+const apiEndpoint = 'https://vrtbc.com/api/tailgate/cluegame';
 var sessionId = '';
 
 // Function to generate a short, unique session ID
@@ -676,7 +676,7 @@ function handlePlayerMove(e) {
 
 function callGPTForMove() {
   // Send the current board state and the unique gameId to the backend
-  fetch("http://localhost:3000/api/tailgate/tictactoe", {
+  fetch("https://vrtbc.com/api/tailgate/tictactoe", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
