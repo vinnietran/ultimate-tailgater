@@ -267,6 +267,13 @@ input::placeholder {
     object-fit: contain; /* Ensures the image fits within the boundaries without being cropped */
 }
 
+#yinzer-whisperer-level img {
+    max-width: 100%;    /* Ensure the image does not overflow the container */
+    height: auto;       /* Maintain the aspect ratio */
+    max-height: 250px;  /* Set a maximum height for the image */
+    object-fit: contain; /* Ensures the image fits within the boundaries without being cropped */
+}
+
 #ball {
     position: absolute;
     width: 50px;
@@ -351,5 +358,26 @@ input::placeholder {
     font-size: 2rem;
     cursor: pointer;
 }
+
+/* Styling for the message box */
+.message-box {
+    background-color: #f0f8ff; /* Light blue to make it stand out */
+    border: 2px solid #007acc; /* Steel blue border for emphasis */
+    border-radius: 10px;
+    padding: 15px;
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+    color: #333; /* Dark color for readability */
+    font-size: 1.2em;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: background-color 0.5s ease; /* Smooth color transition */
+}
+
+/* Animation for new messages */
+.message-box.new-message {
+    background-color: #3fbccc; /* Lighter blue for when new message arrives */
+}
+
 
 /* Optional: Add any additional styles for the game area */

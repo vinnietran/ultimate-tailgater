@@ -1,5 +1,12 @@
 let score = 0;
 let userData = { firstName: "", lastName: "" };
+const apiEndpoint = 'http://localhost:3000/api/tailgate/cluegame';
+var sessionId = '';
+
+// Function to generate a short, unique session ID
+function generateSessionId() {
+  return 'session-' + Math.random().toString(36).substring(2, 10); // Generates a random string
+}
 
 // Trivia Questions (Expand as needed)
 const triviaQuestions = [
@@ -105,6 +112,10 @@ function showLevel(levelId) {
     case "tic-tac-toe-level": // Initialize Tic-Tac-Toe level
       initializeTicTacToeGame();
       break;
+    case "yinzer-whisperer-level": // Initialize Yinzer Whisperer level
+      console.log("Starting Yinzer Whisperer game...");
+      //startGuessingGame(apiEndpoint, sessionId);
+      break;
     case "completion-screen":
       displayFinalScore();
       break;
@@ -114,10 +125,10 @@ function showLevel(levelId) {
 // Show a specific level
 // function showLevel(levelId) {
 //   console.log("Showing level:", levelId);
-//   if (levelId !== "tic-tac-toe-level") {
+//   if (levelId !== "yinzer-whisperer-level") {
 //     return;
 //   }
-
+// }
 //   document.querySelectorAll(".level").forEach((level) => {
 //     level.classList.remove("active");
 //   });
@@ -167,11 +178,15 @@ function checkTriviaAnswer(selectedButton, selectedOption) {
     selectedButton.style.color = "white";
   }
 
+  if (selectedOption === currentQuestion.answer) {
+    score += 1; // Increment the score if the answer is correct
+  }
+
   // Delay before moving to the next question
   setTimeout(() => {
     currentTriviaQuestionIndex += 1;
     loadTriviaQuestion();
-  }, 2000); // Adjust the delay time as needed (1.5 seconds here)
+  }, 1000); // Adjust the delay time as needed (1.5 seconds here)
 }
 
 
@@ -383,7 +398,6 @@ function getLeaderboardData() {
         const entryRow = document.createElement("tr");
         const rankCell = document.createElement("td");
         rankCell.style.border = "5px solid gray"; // Add gray border
-        console.log(entry.rank);
         if (entry.rank === 1) {
           const trophyImg = document.createElement("img");
           trophyImg.src = "trophy.gif";
@@ -690,17 +704,17 @@ function callGPTForMove() {
     })
     .catch((error) => {
       console.error("Error:", error);
-      endGame(
-        "Error: Coach couldn't make a move. You win!",
-        "angry_cowher.jpg",
-        "You Win",
-        true
-      );
+      // console.log("Coach couldn't make a move. You win! 711");
+      // endGame(
+      //   "Error: Coach couldn't make a move. You win!",
+      //   "angry_cowher.jpg",
+      //   "You Win",
+      //   true
+      // );
     });
 }
 
 function makeGPTMove(index) {
-  console.log("GPT move:", index);
   if (ticTacToeBoard[index] !== "" || isGameOver) return;
 
   ticTacToeBoard[index] = "O";
@@ -756,7 +770,6 @@ document
 // };
 
 function endGame(message, imageUrl, imageAlt, isWinner = false) {
-  console.log("Game over:", message);
   // Show status message and image
   document.getElementById("status").textContent = message;
   isGameOver = true;
@@ -778,11 +791,11 @@ function endGame(message, imageUrl, imageAlt, isWinner = false) {
     updateGlobalGameStatus(); // Call a parent function to move to the next level or update overall score
   }
 
-  endTheWholeGame();
+  //endTheWholeGame();
 
   setTimeout(() => {
     // Uncomment if moving to next level
-    showLevel("completion-screen");
+    showLevel("yinzer-whisperer-level");
   }, 2000);
 }
 
@@ -791,3 +804,132 @@ function endTheWholeGame() {
   document.getElementById("leaderboard-table").classList.add("hidden");
   setInterval(getLeaderboardData, 10000); // Refresh leaderboard every second
 }
+
+
+// Function to start the guessing game
+function startGuessingGame(apiEndpoint) {
+  document.getElementById("steelers-logo").style.display = "none"; // Hide the Steelers logo
+
+  sessionId = generateSessionId(); // Generate a unique session ID
+
+  // Show the thinking placeholder
+  document.getElementById("yinzer-message").innerText = "Starting game...";
+
+  // Send initial POST request to start the game
+  fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ sessionId })
+  })
+  .then(response => response.json())
+  .then(data => {
+      // Hide the thinking placeholder and display GPT's response
+      displayMessage(data.clue);
+
+      // Show Yes/No buttons for user response
+      document.getElementById("answer-buttons").style.display = "block";
+      document.getElementById("start-game-section").style.display = "none"; // Hide start button
+  })
+  .catch(error => {
+      console.error("Error starting game:", error);
+      document.getElementById("yinzer-message").innerText = "Error starting game. Please try again.";
+  });
+}
+
+// Function to send Yes/No response during the guessing game
+function sendResponse(playerResponse, sessionId) {
+  console.log("Sending response:", playerResponse);
+
+  // Display the thinking placeholder and temporarily hide Yes/No buttons
+  displayMessage("The Yinzer Whisper is Thinking...");
+  document.getElementById("answer-buttons").style.display = "none";
+
+  // Send POST request with user response
+  fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ sessionId, playerResponse })
+  })
+  .then(response => response.json())
+  .then(data => {
+      // Hide thinking placeholder and display GPT's new response
+      displayMessage(data.clue);
+
+      // Show Yes/No buttons again for the next question
+      if (data.questionsCount < 10) {
+        document.getElementById("answer-buttons").style.display = "block";
+      } else if (data.questionsCount === 10) {
+        document.getElementById("answer-buttons").style.display = "none"; // Hide buttons after 10 questions
+        document.getElementById("end-game-buttons").style.display = "block"; // Show Steelers logo
+      } else {
+        document.getElementById("end-game-buttons").style.display = "none"; // Show Steelers logo 
+        endTheWholeGame(); 
+        // Example usage:
+          // Assuming you have an HTML element with id "timer" to display the countdown
+          const displayElement = document.getElementById("timer");
+          const duration = 10; // Countdown from 10 seconds
+
+          // Call this function where you want to start the countdown
+          startCountdown(duration, displayElement, () => showLevel("completion-screen"));    
+        // setTimeout(() => {
+        //   // Uncomment if moving to next level
+        //   showLevel("completion-screen");
+        // }, 10000);
+      }
+  })
+  .catch(error => {
+      console.error("Error sending response:", error);
+      document.getElementById("yinzer-message").innerText = "Error processing response. Please try again.";
+      document.getElementById("answer-buttons").style.display = "block"; // Show buttons in case of error
+  });
+}
+
+function displayMessage(message) {
+  const messageBox = document.getElementById("yinzer-messages");
+  const messageText = document.getElementById("yinzer-message");
+
+  // Set new message and add animation class
+  messageText.innerText = message;
+  messageBox.classList.add("new-message");
+
+  // Remove the animation class after a short delay
+  setTimeout(() => {
+      messageBox.classList.remove("new-message");
+  }, 500); // 500ms delay for animation effect
+}
+
+
+function stumpedWhisperer () {
+  score += 1;
+}
+
+
+function startCountdown(duration, displayElement, onComplete) {
+  let remainingTime = duration;
+
+  displayElement.style.display = "block"; // Show the countdown timer
+
+  // Display the initial time
+  displayElement.innerText = `Taking you to leaderboard in: ${remainingTime} seconds`;
+
+  const countdownInterval = setInterval(() => {
+    remainingTime -= 1;
+    displayElement.innerText = `Taking you to leaderboard in: ${remainingTime} seconds`;
+
+    if (remainingTime <= 0) {
+      clearInterval(countdownInterval);
+      displayElement.innerText = "Time's up!";
+      onComplete(); // Execute the callback function to move to the next level
+    }
+  }, 1000); // Update every second
+}
+
+
+
+
+
+
