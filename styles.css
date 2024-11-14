@@ -376,7 +376,7 @@ input::placeholder {
 
 /* Animation for new messages */
 .message-box.new-message {
-    background-color: #e0f7fa; /* Lighter blue for when new message arrives */
+    background-color: #3fbccc; /* Lighter blue for when new message arrives */
 }
 
 

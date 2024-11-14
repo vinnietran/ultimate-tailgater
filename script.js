@@ -112,9 +112,9 @@ function showLevel(levelId) {
     case "tic-tac-toe-level": // Initialize Tic-Tac-Toe level
       initializeTicTacToeGame();
       break;
-    case "yinzer-whisperer-level": // Initialize Tic-Tac-Toe level
+    case "yinzer-whisperer-level": // Initialize Yinzer Whisperer level
       console.log("Starting Yinzer Whisperer game...");
-      startGuessingGame(apiEndpoint, sessionId);
+      //startGuessingGame(apiEndpoint, sessionId);
       break;
     case "completion-screen":
       displayFinalScore();
@@ -123,12 +123,12 @@ function showLevel(levelId) {
 }
 
 // Show a specific level
-function showLevel(levelId) {
-  console.log("Showing level:", levelId);
-  if (levelId !== "yinzer-whisperer-level") {
-    return;
-  }
-}
+// function showLevel(levelId) {
+//   console.log("Showing level:", levelId);
+//   if (levelId !== "yinzer-whisperer-level") {
+//     return;
+//   }
+// }
 //   document.querySelectorAll(".level").forEach((level) => {
 //     level.classList.remove("active");
 //   });
@@ -176,6 +176,11 @@ function checkTriviaAnswer(selectedButton, selectedOption) {
   if (selectedOption !== currentQuestion.answer) {
     selectedButton.style.backgroundColor = "red";
     selectedButton.style.color = "white";
+  }
+
+  if (selectedOption === currentQuestion.answer) {
+    score += 1; // Increment the score if the answer is correct
+    console.log("Correct! Score:", score);
   }
 
   // Delay before moving to the next question
@@ -433,6 +438,7 @@ const helmetPositions = [
 ];
 
 function initializeFindBallGame() {
+  console.log(score)
   document.getElementById("find-ball-message").textContent =
     'Click "Start Game" to begin!';
   document.getElementById("find-ball-start-button").style.display =
@@ -616,6 +622,7 @@ let isGameOver = false;
 let playerSymbol = "X"; // Player is 'X', GPT is 'O'
 
 function initializeTicTacToeGame() {
+  console.log(score)
   console.log("Initializing Tic-Tac-Toe game...");
   // Generate a unique game ID
   gameId = generateGameId();
@@ -806,6 +813,7 @@ function endTheWholeGame() {
 
 // Function to start the guessing game
 function startGuessingGame(apiEndpoint) {
+  console.log(score)
   document.getElementById("steelers-logo").style.display = "none"; // Hide the Steelers logo
   console.log("Starting Yinzer Whisperer game with endpoint:", apiEndpoint);
 
@@ -869,6 +877,10 @@ function sendResponse(playerResponse, sessionId) {
       } else {
         document.getElementById("end-game-buttons").style.display = "none"; // Show Steelers logo 
         endTheWholeGame();     
+        setTimeout(() => {
+          // Uncomment if moving to next level
+          showLevel("completion-screen");
+        }, 10000);
       }
   })
   .catch(error => {
@@ -892,29 +904,13 @@ function displayMessage(message) {
   }, 500); // 500ms delay for animation effect
 }
 
-let playerName = ""; // Variable to store the player's input
 
-// Function to capture the player’s input and start the game
-function submitPlayerName() {
-    // Get the player's input
-    playerName = document.getElementById("player-name").value.trim();
-
-    // Check if the input is empty
-    if (playerName === "") {
-        alert("Please enter the name of the player you're thinking of.");
-        return;
-    }
-
-    // Hide the input section after submission
-    document.getElementById("player-input-section").style.display = "none";
-
-    // Start the guessing game
-    startGuessingGame(apiEndpoint, sessionId);
-}
-
-function stumpedWhisperer (score) {
+function stumpedWhisperer () {
+  console.log("STUMPED")
   score += 1;
+  console.log("final " + score)
 }
+
 
 
 
