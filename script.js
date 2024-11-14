@@ -180,7 +180,6 @@ function checkTriviaAnswer(selectedButton, selectedOption) {
 
   if (selectedOption === currentQuestion.answer) {
     score += 1; // Increment the score if the answer is correct
-    console.log("Correct! Score:", score);
   }
 
   // Delay before moving to the next question
@@ -399,7 +398,6 @@ function getLeaderboardData() {
         const entryRow = document.createElement("tr");
         const rankCell = document.createElement("td");
         rankCell.style.border = "5px solid gray"; // Add gray border
-        console.log(entry.rank);
         if (entry.rank === 1) {
           const trophyImg = document.createElement("img");
           trophyImg.src = "trophy.gif";
@@ -438,7 +436,6 @@ const helmetPositions = [
 ];
 
 function initializeFindBallGame() {
-  console.log(score)
   document.getElementById("find-ball-message").textContent =
     'Click "Start Game" to begin!';
   document.getElementById("find-ball-start-button").style.display =
@@ -622,7 +619,6 @@ let isGameOver = false;
 let playerSymbol = "X"; // Player is 'X', GPT is 'O'
 
 function initializeTicTacToeGame() {
-  console.log(score)
   console.log("Initializing Tic-Tac-Toe game...");
   // Generate a unique game ID
   gameId = generateGameId();
@@ -708,17 +704,17 @@ function callGPTForMove() {
     })
     .catch((error) => {
       console.error("Error:", error);
-      endGame(
-        "Error: Coach couldn't make a move. You win!",
-        "angry_cowher.jpg",
-        "You Win",
-        true
-      );
+      // console.log("Coach couldn't make a move. You win! 711");
+      // endGame(
+      //   "Error: Coach couldn't make a move. You win!",
+      //   "angry_cowher.jpg",
+      //   "You Win",
+      //   true
+      // );
     });
 }
 
 function makeGPTMove(index) {
-  console.log("GPT move:", index);
   if (ticTacToeBoard[index] !== "" || isGameOver) return;
 
   ticTacToeBoard[index] = "O";
@@ -774,7 +770,6 @@ document
 // };
 
 function endGame(message, imageUrl, imageAlt, isWinner = false) {
-  console.log("Game over:", message);
   // Show status message and image
   document.getElementById("status").textContent = message;
   isGameOver = true;
@@ -813,9 +808,7 @@ function endTheWholeGame() {
 
 // Function to start the guessing game
 function startGuessingGame(apiEndpoint) {
-  console.log(score)
   document.getElementById("steelers-logo").style.display = "none"; // Hide the Steelers logo
-  console.log("Starting Yinzer Whisperer game with endpoint:", apiEndpoint);
 
   sessionId = generateSessionId(); // Generate a unique session ID
 
@@ -832,7 +825,6 @@ function startGuessingGame(apiEndpoint) {
   })
   .then(response => response.json())
   .then(data => {
-    console.log("Game started:", data);
       // Hide the thinking placeholder and display GPT's response
       displayMessage(data.clue);
 
@@ -866,7 +858,6 @@ function sendResponse(playerResponse, sessionId) {
   .then(data => {
       // Hide thinking placeholder and display GPT's new response
       displayMessage(data.clue);
-      console.log(data)
 
       // Show Yes/No buttons again for the next question
       if (data.questionsCount < 10) {
@@ -876,11 +867,18 @@ function sendResponse(playerResponse, sessionId) {
         document.getElementById("end-game-buttons").style.display = "block"; // Show Steelers logo
       } else {
         document.getElementById("end-game-buttons").style.display = "none"; // Show Steelers logo 
-        endTheWholeGame();     
-        setTimeout(() => {
-          // Uncomment if moving to next level
-          showLevel("completion-screen");
-        }, 10000);
+        endTheWholeGame(); 
+        // Example usage:
+          // Assuming you have an HTML element with id "timer" to display the countdown
+          const displayElement = document.getElementById("timer");
+          const duration = 10; // Countdown from 10 seconds
+
+          // Call this function where you want to start the countdown
+          startCountdown(duration, displayElement, () => showLevel("completion-screen"));    
+        // setTimeout(() => {
+        //   // Uncomment if moving to next level
+        //   showLevel("completion-screen");
+        // }, 10000);
       }
   })
   .catch(error => {
@@ -906,10 +904,31 @@ function displayMessage(message) {
 
 
 function stumpedWhisperer () {
-  console.log("STUMPED")
   score += 1;
-  console.log("final " + score)
 }
+
+
+function startCountdown(duration, displayElement, onComplete) {
+  let remainingTime = duration;
+
+  displayElement.style.display = "block"; // Show the countdown timer
+
+  // Display the initial time
+  displayElement.innerText = `Taking you to leaderboard in: ${remainingTime} seconds`;
+
+  const countdownInterval = setInterval(() => {
+    remainingTime -= 1;
+    displayElement.innerText = `Taking you to leaderboard in: ${remainingTime} seconds`;
+
+    if (remainingTime <= 0) {
+      clearInterval(countdownInterval);
+      displayElement.innerText = "Time's up!";
+      onComplete(); // Execute the callback function to move to the next level
+    }
+  }, 1000); // Update every second
+}
+
+
 
 
 
